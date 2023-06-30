@@ -1,11 +1,8 @@
 import http.server
 import socketserver
-import webbrowser
 import os
 import cgi
 import json
-import winreg
-import re
 from TimetableProcessorClass import TimetableProcessor
 from datetime import datetime
 
@@ -13,7 +10,6 @@ class SimpleHttpRequestHandlerWithPost(http.server.SimpleHTTPRequestHandler):
     SAVE_FILE_PATH = ".\\tmp\\inputFile.csv"
 
     def _send_response_data(self,responseCode,msg=None):
-        print("woooooooooooooooooooooooooooooooo")
         self.send_response(responseCode,message=msg)
         self.end_headers()
         self.wfile.write(bytes(msg,"utf-8"))#payload
@@ -40,16 +36,15 @@ class SimpleHttpRequestHandlerWithPost(http.server.SimpleHTTPRequestHandler):
             headers=self.headers,
             environ={'REQUEST_METHOD': 'POST'}
         )
-        print(form)
         if "filename" in form:
             TimetableProcessor.clear()#clear object arrays
             print("filename is in form")
             fileitem = form["filename"]
             message = None
 
-            #Test if the file was uploaded
-            if len(fileitem.filename) > 0:
+            if len(fileitem.filename) > 0:#test if file was uploaded
                 print("filename length > 0")
+                print(fileitem.filename)
                 # strip leading path from file name to avoid 
                 # directory traversal attacks
             try:
@@ -95,19 +90,11 @@ class SimpleHttpRequestHandlerWithPost(http.server.SimpleHTTPRequestHandler):
 
             self._send_response_data(responseCode,msg=message)
 
-PORT = 5500
-command = winreg.QueryValueEx(winreg.OpenKey(winreg.HKEY_CLASSES_ROOT,"ChromeHTML\\shell\open\\command",0,winreg.KEY_READ),"")[0]
-CHROME_PATH = re.search("\"(.*?)\"", command).group(1)
-print("chrome path: " + CHROME_PATH)
-
-webbrowser.register("chrome",None,webbrowser.BackgroundBrowser(CHROME_PATH))
-
-browser = webbrowser.get("chrome")
+PORT = 80
 
 try:
     with socketserver.TCPServer(("",PORT),SimpleHttpRequestHandlerWithPost) as httpd:
         print("serving at port " + str(PORT))
-        browser.open("127.0.0.1:" + str(PORT))
         httpd.serve_forever()
 except BaseException as e:
     print(e.message)

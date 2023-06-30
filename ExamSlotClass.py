@@ -1,5 +1,4 @@
 from copy import deepcopy
-from datetime import datetime
 
 class ExamSlot():
     def __init__(self,datetime):
@@ -24,6 +23,6 @@ class ExamSlot():
         myExamlist = deepcopy(self.listOfSubjectExams)
         for i in range(len(myExamlist)-1):
             for j in range(i+1,len(myExamlist)):
-                numClashes = myExamlist[i].getNumClashes(myExamlist[j])[0]#! added [0]
+                numClashes = myExamlist[i].getNumClashes(myExamlist[j])[0]
                 if 0 < numClashes:
                     self.clashes.append(myExamlist[i].name + "/" + myExamlist[j].name + " [" + str(numClashes) + " students]")#create display str

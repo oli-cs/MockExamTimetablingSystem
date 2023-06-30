@@ -163,7 +163,6 @@ function toggleClashes(){
     }
 }
 
-
 function init(){
     document.getElementById("upload").style.display = "block";
     document.getElementById("timetable").style.display = "none";

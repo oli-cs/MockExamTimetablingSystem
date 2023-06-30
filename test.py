@@ -62,27 +62,27 @@ class testcreateExamAndStudentObjects(unittest.TestCase):
         self.assertEqual(str(TimetableProcessor.examSlots[11].datetime),"2021-08-19 13:00:00")
 
     def test_timetableExams(self):
-        data = TimetableProcessor.createExamAndStudentObjects("testData\\test_timetablingAlgorithmTimetablesStudents.csv")
+        TimetableProcessor.createExamAndStudentObjects("testData\\test_timetablingAlgorithmTimetablesStudents.csv")
         TimetableProcessor.createExamSlots(datetime(2021,9,27),2)
         examSlots = TimetableProcessor.timetableExams()
         
         self.assertEqual(examSlots,TimetableProcessor.examSlots)
         self.assertEqual(examSlots[0].listOfSubjectExams[0].getExamDetailsDict(),
-        {"name":"Biology","examLength":"","room":"","numStudents":3})
-        self.assertEqual(examSlots[0].listOfSubjectExams[1].getExamDetailsDict(),
-        {"name":"Physics","examLength":"","room":"","numStudents":1})
-        self.assertEqual(examSlots[0].listOfSubjectExams[2].getExamDetailsDict(),
-        {"name":"RE","examLength":"","room":"","numStudents":1})
-        self.assertEqual(examSlots[1].listOfSubjectExams[0].getExamDetailsDict(),
-        {"name":"Chemistry","examLength":"","room":"","numStudents":3})
-        self.assertEqual(examSlots[2].listOfSubjectExams[0].getExamDetailsDict(),
-        {"name":"Computer_Science","examLength":"","room":"","numStudents":1})
-        self.assertEqual(examSlots[2].listOfSubjectExams[1].getExamDetailsDict(),
         {"name":"History","examLength":"","room":"","numStudents":3})
-        self.assertEqual(examSlots[2].listOfSubjectExams[2].getExamDetailsDict(),
+        self.assertEqual(examSlots[0].listOfSubjectExams[1].getExamDetailsDict(),
+        {"name":"Computer_Science","examLength":"","room":"","numStudents":1})
+        self.assertEqual(examSlots[1].listOfSubjectExams[0].getExamDetailsDict(),
         {"name":"Maths","examLength":"","room":"","numStudents":3})
-        self.assertEqual(examSlots[3].listOfSubjectExams[0].getExamDetailsDict(),
+        self.assertEqual(examSlots[1].listOfSubjectExams[1].getExamDetailsDict(),
+        {"name":"Physics","examLength":"","room":"","numStudents":1})
+        self.assertEqual(examSlots[1].listOfSubjectExams[2].getExamDetailsDict(),
+        {"name":"RE","examLength":"","room":"","numStudents":1})
+        self.assertEqual(examSlots[2].listOfSubjectExams[0].getExamDetailsDict(),
+        {"name":"Biology","examLength":"","room":"","numStudents":2})
+        self.assertEqual(examSlots[2].listOfSubjectExams[1].getExamDetailsDict(),
         {"name":"Economics","examLength":"","room":"","numStudents":1})
+        self.assertEqual(examSlots[3].listOfSubjectExams[0].getExamDetailsDict(),
+        {"name":"Chemistry","examLength":"","room":"","numStudents":2})
 
 
 if __name__ == "__main__":
