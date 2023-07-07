@@ -16,17 +16,16 @@
         <h1>Mock Exam Timetabling System</h1>
         <div id=upload>
             <p>
-                <h3><u>Please upload your file in <b>.csv</b> format.</u></h3> 
-                If you have another file format(eg .xlsx) you will have to export the file as .csv file.
+                <h3><u>Please upload your files in <b>.csv</b> format.</u></h3> 
+                If you have another file format(eg .xlsx) you will have to export the files as .csv file.
             </p>
             <div>
-                <form id="uploadForm" enctype="multipart/form-data" method="post">
-                    <p>File: <input type="file" name="filename" accept=".csv" required/></p>
-                    <p>Mock exam series start Date: <input type="date" name="startDate" required/></p>
-                    <p>Length of mock series in whole days: <input type="number" name="mockExamSeriesLengthInDays" value="5" required></p>
-                    <p><input id="submitForm" type="submit" value="Upload" /></p>
-                    
-                </form>
+                    <p>Students and Exams File: <input type="file" id="studentsAndExams" accept=".csv" onchange="readCsvFile(this)" required/></p>
+                    <p>Room names and capacities file: <input type="file" id="roomData" accept=".csv" onchange="readCsvFile(this)" required/></p>
+                    <p>Exam Lengths: <input type="file" id="examLengths" accept=".csv" onchange="readCsvFile(this)" required/></p>
+                    <p>Mock exam series start Date: <input type="date" id="startDate" onchange="getInputData(this)" required/></p>
+                    <p>Length of mock series in whole days: <input type="number" id="mockExamSeriesLengthInDays" onchange="getInputData(this)" required></p>
+                    <p><button onclick="processSubmit()">Upload</button></p>
             </div>
         </div>
 
@@ -56,7 +55,7 @@
     </body>
 
     <footer>
-        <p>Mock Exam Timetabling System v1.01 ~ Oli Sharp, Oct 2021</p>
+        <p>Mock Exam Timetabling System v1.02 ~ Oli Sharp, Jul 2023</p>
     </footer>
     
 

@@ -1,14 +1,43 @@
-//483
-function processSubmit(myEvent){
-    myEvent.preventDefault();
-    var request = new XMLHttpRequest();//create a new request object
+let jsonToPost = {}
+
+function processSubmit(){
+    let request = new XMLHttpRequest();//create a new request object
     request.onreadystatechange = function(){//creates a function that is executed when the readyState of the XMLHttpRequest changes, request is known as a callback function
         processSuccessResult(request);
         processFailResult(request);
     }
-    request.open("POST","127.0.0.1:5500",true);
-    request.send(new FormData(document.getElementById("uploadForm")));
 
+        console.log(jsonToPost);
+        request.open("POST","127.0.0.1:5500",true);
+        request.send(JSON.stringify(jsonToPost));
+}
+
+function getInputData(inputTag){
+    jsonToPost[inputTag.id] = inputTag.value
+}
+
+function readCsvFile(inputTag) {
+    let file = inputTag.files[0];
+    let reader = new FileReader();
+    reader.readAsText(file);
+    reader.onload = function(){
+        fileJson = getCsvJson(reader.result);
+        jsonToPost[inputTag.id] = fileJson;
+
+    }
+    reader.onerror = function(){
+        displayFailResult(reader.error);
+    }
+    
+}
+
+function getCsvJson(csvText){
+    let csvJson = {};
+    let studentAndExamsArray = csvText.split("\n");
+    csvJson.headerRow = studentAndExamsArray[0];
+    csvJson.data = studentAndExamsArray.slice(1);
+    console.log(csvJson.data);
+    return csvJson;
 }
 
 function displayFailResult(serverResponseText) {
@@ -166,6 +195,5 @@ function toggleClashes(){
 function init(){
     document.getElementById("upload").style.display = "block";
     document.getElementById("timetable").style.display = "none";
-    document.getElementById("uploadForm").addEventListener("submit",processSubmit);//runs the above function when the button to submit the csv is clicked
 }
 window.onload = init;

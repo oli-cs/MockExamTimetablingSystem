@@ -30,65 +30,19 @@ class SimpleHttpRequestHandlerWithPost(http.server.SimpleHTTPRequestHandler):
     def do_POST(self):
         print("POST called")
         responseCode = 452# default response code is fail
+        message = ""
+        messageBodyLength = int(self.headers["Content-Length"])
+        messageBody = json.loads(self.rfile.read(messageBodyLength))
+        #!split message body into exams+students, rooms+capacities, and exams+examlengths
+        #!create objects based on data
+        #!redesign algorithm to take into account room capacities and exam lengths when calculating clashes
+        #!incorporate room and exam length into output
 
-        form = cgi.FieldStorage(
-            fp=self.rfile,
-            headers=self.headers,
-            environ={'REQUEST_METHOD': 'POST'}
-        )
-        if "filename" in form:
-            TimetableProcessor.clear()#clear object arrays
-            print("filename is in form")
-            fileitem = form["filename"]
-            message = None
+       
+        
+        print("send json response: ",message)
 
-            if len(fileitem.filename) > 0:#test if file was uploaded
-                print("filename length > 0")
-                print(fileitem.filename)
-                # strip leading path from file name to avoid 
-                # directory traversal attacks
-            try:
-                print("creating the directory")
-                fn = os.path.basename(fileitem.filename)
-                if not os.path.isdir(".\\tmp"):
-                    os.makedirs(".\\tmp")
-                with open(SimpleHttpRequestHandlerWithPost.SAVE_FILE_PATH, "wb") as myFile:
-                    print("writing the file to the directory")
-                    myFile.write(fileitem.file.read())
-            except BaseException as error:
-                message = self.__getErrorJson("Could not write file: " + error.message)
-            
-            if message == None:
-                print("no errors so far")
-                try:
-                    message = TimetableProcessor.createExamAndStudentObjects(SimpleHttpRequestHandlerWithPost.SAVE_FILE_PATH)
-                    if message != None:
-                        print("creating objects failed")
-                        message = self.__getErrorJson(message)
-                except BaseException as error:
-                    print("file processing not possible")
-                    message = self.__getErrorJson("Could not process file: " + error.message)
-            
-            if message == None:
-                print("getting list of exams")
-                if "startDate" in form:
-                    startDate = form.getvalue("startDate")
-                    print("startDate: " + str(startDate))
-                    startDate = startDate.split("-")#makes a list [year,month,day]
-                    startDatetime = datetime(int(startDate[0]),int(startDate[1]),int(startDate[2]))
-                    if "mockExamSeriesLengthInDays" in form:
-                        examSeriesLength = int(form.getvalue("mockExamSeriesLengthInDays"))
-                        print("examSeriesLength: " + str(examSeriesLength))
-                        message = self.__getTimetableJson(fn,startDatetime,examSeriesLength)
-                        responseCode = 200# OK
-                    else:
-                        message = self.__getErrorJson("length of exam series was not supplied")
-                else:
-                    message = self.__getErrorJson("start date was not supplied")
-            
-            print("send json response: ",message)
-
-            self._send_response_data(responseCode,msg=message)
+        self._send_response_data(responseCode,msg=message)
 
 PORT = 80
 
